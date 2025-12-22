@@ -1,0 +1,136 @@
+# SubtitleMaker - Default Configuration
+
+app:
+  name: "SubtitleMaker"
+  version: "0.1.0"
+  environment: "development"
+  debug: true
+
+server:
+  host: "127.0.0.1"
+  port: 8000
+  workers: 1
+  reload: true
+
+# GPU Configuration - Optimized for RTX 4070 Super (12GB VRAM)
+gpu:
+  enabled: true
+  device: "cuda:0"
+  memory_fraction: 0.85
+  allow_growth: true
+  fp16: true
+  max_temperature: 80  # Celsius
+  throttle_on_temp: true
+
+# Whisper Transcription Settings
+whisper:
+  model: "large-v3"  # large-v3-turbo for faster processing
+  compute_type: "float16"
+  batch_size: 8
+  num_workers: 4
+  language: null  # Auto-detect
+  task: "transcribe"  # transcribe or translate
+  vad_filter: true
+  word_timestamps: true
+
+# Cache Configuration
+cache:
+  enabled: true
+  directory: "./cache"
+  max_size_gb: 20
+  ttl_seconds: 86400  # 24 hours
+  compression: true
+
+# Processing Settings
+processing:
+  segment_min_length: 1.0  # seconds
+  segment_max_length: 10.0  # seconds
+  max_line_width: 42  # characters
+  max_lines: 2
+  remove_filler_words: false
+  capitalize_proper_nouns: true
+
+# Post-Processing
+post_processing:
+  enabled: true
+  spell_check: true
+  punctuation: true
+  ner_capitalization: true
+
+# Export Settings
+export:
+  formats:
+    - srt
+    - vtt
+    - ass
+    - txt
+  default_format: "srt"
+  encoding: "utf-8-sig"
+
+# Upload Settings
+upload:
+  max_file_size_mb: 500
+  chunk_size_mb: 10
+  allowed_formats:
+    - mp4
+    - mov
+    - avi
+    - mkv
+    - webm
+    - flv
+    - mp3
+    - wav
+    - m4a
+  temp_directory: "./temp"
+
+# Database
+database:
+  url: "postgresql+asyncpg://user:password@localhost:5432/subtitle_maker"
+  pool_size: 10
+  max_overflow: 20
+  echo: false
+
+# Redis
+redis:
+  host: "localhost"
+  port: 6379
+  db: 0
+  password: null
+  max_connections: 50
+
+# Security
+security:
+  secret_key: "change-me-in-production-use-env-var"
+  algorithm: "HS256"
+  access_token_expire_minutes: 30
+  refresh_token_expire_days: 7
+
+# CORS
+cors:
+  allowed_origins:
+    - "http://localhost:5173"
+    - "http://localhost:3000"
+  allowed_methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+  allowed_headers:
+    - "*"
+  allow_credentials: true
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "json"  # json or text
+  file: "./logs/app.log"
+  rotation: "100 MB"
+  retention: "30 days"
+
+# Monitoring
+monitoring:
+  prometheus_enabled: true
+  prometheus_port: 9090
+  metrics_path: "/metrics"
+  gpu_monitoring: true

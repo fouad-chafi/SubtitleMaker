@@ -1,0 +1,316 @@
+# Supported Languages for Whisper Transcription
+
+languages:
+  afrikaans:
+    code: "af"
+    name: "Afrikaans"
+    whisper_code: "af"
+
+  arabic:
+    code: "ar"
+    name: "Arabic"
+    whisper_code: "ar"
+
+  armenian:
+    code: "hy"
+    name: "Armenian"
+    whisper_code: "hy"
+
+  azerbaijani:
+    code: "az"
+    name: "Azerbaijani"
+    whisper_code: "az"
+
+  belarusian:
+    code: "be"
+    name: "Belarusian"
+    whisper_code: "be"
+
+  bosnian:
+    code: "bs"
+    name: "Bosnian"
+    whisper_code: "bs"
+
+  bulgarian:
+    code: "bg"
+    name: "Bulgarian"
+    whisper_code: "bg"
+
+  catalan:
+    code: "ca"
+    name: "Catalan"
+    whisper_code: "ca"
+
+  chinese:
+    code: "zh"
+    name: "Chinese"
+    variants:
+      - code: "zh-CN"
+        name: "Mandarin (Simplified)"
+        whisper_code: "zh"
+      - code: "zh-TW"
+        name: "Mandarin (Traditional)"
+        whisper_code: "zh"
+
+  croatian:
+    code: "hr"
+    name: "Croatian"
+    whisper_code: "hr"
+
+  czech:
+    code: "cs"
+    name: "Czech"
+    whisper_code: "cs"
+
+  danish:
+    code: "da"
+    name: "Danish"
+    whisper_code: "da"
+
+  dutch:
+    code: "nl"
+    name: "Dutch"
+    whisper_code: "nl"
+
+  english:
+    code: "en"
+    name: "English"
+    variants:
+      - code: "en-US"
+        name: "English (US)"
+        whisper_code: "en"
+      - code: "en-GB"
+        name: "English (UK)"
+        whisper_code: "en"
+
+  estonian:
+    code: "et"
+    name: "Estonian"
+    whisper_code: "et"
+
+  finnish:
+    code: "fi"
+    name: "Finnish"
+    whisper_code: "fi"
+
+  french:
+    code: "fr"
+    name: "French"
+    whisper_code: "fr"
+
+  galician:
+    code: "gl"
+    name: "Galician"
+    whisper_code: "gl"
+
+  german:
+    code: "de"
+    name: "German"
+    whisper_code: "de"
+
+  greek:
+    code: "el"
+    name: "Greek"
+    whisper_code: "el"
+
+  hebrew:
+    code: "he"
+    name: "Hebrew"
+    whisper_code: "he"
+
+  hindi:
+    code: "hi"
+    name: "Hindi"
+    whisper_code: "hi"
+
+  hungarian:
+    code: "hu"
+    name: "Hungarian"
+    whisper_code: "hu"
+
+  icelandic:
+    code: "is"
+    name: "Icelandic"
+    whisper_code: "is"
+
+  indonesian:
+    code: "id"
+    name: "Indonesian"
+    whisper_code: "id"
+
+  italian:
+    code: "it"
+    name: "Italian"
+    whisper_code: "it"
+
+  japanese:
+    code: "ja"
+    name: "Japanese"
+    whisper_code: "ja"
+
+  kannada:
+    code: "kn"
+    name: "Kannada"
+    whisper_code: "kn"
+
+  kazakh:
+    code: "kk"
+    name: "Kazakh"
+    whisper_code: "kk"
+
+  korean:
+    code: "ko"
+    name: "Korean"
+    whisper_code: "ko"
+
+  latvian:
+    code: "lv"
+    name: "Latvian"
+    whisper_code: "lv"
+
+  lithuanian:
+    code: "lt"
+    name: "Lithuanian"
+    whisper_code: "lt"
+
+  macedonian:
+    code: "mk"
+    name: "Macedonian"
+    whisper_code: "mk"
+
+  malay:
+    code: "ms"
+    name: "Malay"
+    whisper_code: "ms"
+
+  marathi:
+    code: "mr"
+    name: "Marathi"
+    whisper_code: "mr"
+
+  maori:
+    code: "mi"
+    name: "Maori"
+    whisper_code: "mi"
+
+  nepali:
+    code: "ne"
+    name: "Nepali"
+    whisper_code: "ne"
+
+  norwegian:
+    code: "no"
+    name: "Norwegian"
+    whisper_code: "no"
+
+  persian:
+    code: "fa"
+    name: "Persian"
+    whisper_code: "fa"
+
+  polish:
+    code: "pl"
+    name: "Polish"
+    whisper_code: "pl"
+
+  portuguese:
+    code: "pt"
+    name: "Portuguese"
+    variants:
+      - code: "pt-BR"
+        name: "Portuguese (Brazil)"
+        whisper_code: "pt"
+      - code: "pt-PT"
+        name: "Portuguese (Portugal)"
+        whisper_code: "pt"
+
+  romanian:
+    code: "ro"
+    name: "Romanian"
+    whisper_code: "ro"
+
+  russian:
+    code: "ru"
+    name: "Russian"
+    whisper_code: "ru"
+
+  serbian:
+    code: "sr"
+    name: "Serbian"
+    whisper_code: "sr"
+
+  slovak:
+    code: "sk"
+    name: "Slovak"
+    whisper_code: "sk"
+
+  slovenian:
+    code: "sl"
+    name: "Slovenian"
+    whisper_code: "sl"
+
+  spanish:
+    code: "es"
+    name: "Spanish"
+    variants:
+      - code: "es-ES"
+        name: "Spanish (Spain)"
+        whisper_code: "es"
+      - code: "es-MX"
+        name: "Spanish (Mexico)"
+        whisper_code: "es"
+
+  swahili:
+    code: "sw"
+    name: "Swahili"
+    whisper_code: "sw"
+
+  swedish:
+    code: "sv"
+    name: "Swedish"
+    whisper_code: "sv"
+
+  tagalog:
+    code: "tl"
+    name: "Tagalog"
+    whisper_code: "tl"
+
+  tamil:
+    code: "ta"
+    name: "Tamil"
+    whisper_code: "ta"
+
+  telugu:
+    code: "te"
+    name: "Telugu"
+    whisper_code: "te"
+
+  thai:
+    code: "th"
+    name: "Thai"
+    whisper_code: "th"
+
+  turkish:
+    code: "tr"
+    name: "Turkish"
+    whisper_code: "tr"
+
+  ukrainian:
+    code: "uk"
+    name: "Ukrainian"
+    whisper_code: "uk"
+
+  urdu:
+    code: "ur"
+    name: "Urdu"
+    whisper_code: "ur"
+
+  vietnamese:
+    code: "vi"
+    name: "Vietnamese"
+    whisper_code: "vi"
+
+  welsh:
+    code: "cy"
+    name: "Welsh"
+    whisper_code: "cy"

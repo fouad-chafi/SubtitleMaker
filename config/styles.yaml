@@ -1,0 +1,122 @@
+# Subtitle Style Presets
+
+styles:
+  professional:
+    name: "Professional"
+    font_family: "Arial"
+    font_size: 24
+    font_color: "#FFFFFF"
+    font_style: "normal"
+    font_weight: "normal"
+    background_color: "#000000"
+    background_opacity: 0.0
+    outline_color: "#000000"
+    outline_width: 2
+    shadow_color: "#000000"
+    shadow_depth: 2
+    position: "bottom"
+    vertical_margin: 50
+    horizontal_margin: 50
+    alignment: "center"
+    max_lines: 2
+    max_width: 80
+
+  accessible:
+    name: "Accessible (WCAG AAA)"
+    font_family: "Arial"
+    font_size: 28
+    font_color: "#FFFF00"
+    font_style: "normal"
+    font_weight: "bold"
+    background_color: "#000000"
+    background_opacity: 0.75
+    outline_color: "#000000"
+    outline_width: 3
+    shadow_color: "#000000"
+    shadow_depth: 0
+    position: "bottom"
+    vertical_margin: 50
+    horizontal_margin: 50
+    alignment: "center"
+    max_lines: 2
+    max_width: 70
+
+  minimalist:
+    name: "Minimalist"
+    font_family: "Helvetica"
+    font_size: 22
+    font_color: "#FFFFFF"
+    font_style: "normal"
+    font_weight: "300"
+    background_color: "#000000"
+    background_opacity: 0.0
+    outline_color: "#000000"
+    outline_width: 1
+    shadow_color: "#000000"
+    shadow_depth: 1
+    position: "bottom"
+    vertical_margin: 40
+    horizontal_margin: 50
+    alignment: "center"
+    max_lines: 2
+    max_width: 85
+
+  cinema:
+    name: "Cinema"
+    font_family: "Georgia"
+    font_size: 26
+    font_color: "#FFFFFF"
+    font_style: "italic"
+    font_weight: "normal"
+    background_color: "#000000"
+    background_opacity: 0.0
+    outline_color: "#000000"
+    outline_width: 2
+    shadow_color: "#000000"
+    shadow_depth: 3
+    position: "bottom"
+    vertical_margin: 60
+    horizontal_margin: 80
+    alignment: "center"
+    max_lines: 2
+    max_width: 75
+
+  youtube:
+    name: "YouTube Standard"
+    font_family: "Arial"
+    font_size: 20
+    font_color: "#FFFFFF"
+    font_style: "normal"
+    font_weight: "normal"
+    background_color: "#000000"
+    background_opacity: 0.0
+    outline_color: "#000000"
+    outline_width: 2
+    shadow_color: "#000000"
+    shadow_depth: 2
+    position: "bottom"
+    vertical_margin: 40
+    horizontal_margin: 40
+    alignment: "center"
+    max_lines: 2
+    max_width: 80
+
+  neon:
+    name: "Neon Glow"
+    font_family: "Verdana"
+    font_size: 24
+    font_color: "#00FFFF"
+    font_style: "normal"
+    font_weight: "bold"
+    background_color: "#000000"
+    background_opacity: 0.0
+    outline_color: "#FF00FF"
+    outline_width: 2
+    shadow_color: "#00FFFF"
+    shadow_depth: 4
+    position: "bottom"
+    vertical_margin: 50
+    horizontal_margin: 50
+    alignment: "center"
+    max_lines: 2
+    max_width: 80
