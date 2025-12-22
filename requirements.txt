@@ -1,54 +1,30 @@
 # Core Dependencies
-openai-whisper==20240928
-torch>=2.5.0
-torchvision>=0.20.0
-torchaudio>=2.5.0
 faster-whisper==1.1.0
 
 # API Framework
-fastapi==0.115.6
-uvicorn[standard]==0.34.0
-pydantic==2.10.3
-pydantic-settings==2.6.1
-python-multipart==0.0.20
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.9.0
+pydantic-settings>=2.5.0
+python-multipart>=0.0.12
 
 # Video Processing
-ffmpeg-python==0.2.0
-pydub==0.25.1
+ffmpeg-python>=0.2.0
 
-# Database & Cache
-sqlalchemy==2.0.36
-asyncpg==0.30.0
-redis==5.2.1
-alembic==1.14.0
-
-# NLP & Post-processing
-spacy>=3.8.0
-language-tool-python==2.8.4
+# Database & Cache (optional - can use SQLite)
+aiosqlite>=0.20.0
 
 # Utilities
-python-dotenv==1.0.1
-pyyaml==6.0.2
-httpx==0.28.1
-aiofiles==24.1.0
+python-dotenv>=1.0.0
+pyyaml>=6.0
+aiofiles>=24.1.0
 
 # Monitoring & Logging
-loguru==0.7.3
-prometheus-client==0.21.1
-
-# Security
-python-jose[cryptography]==3.3.0
-passlib[bcrypt]==1.7.4
-python-multipart==0.0.20
-
-# CORS
-python-cors==1.0.0
+loguru>=0.7.2
 
 # Development
-pytest==8.3.4
-pytest-asyncio==0.25.0
-pytest-cov==6.0.0
-black==24.10.0
-ruff==0.8.4
-mypy==1.13.0
-httpx==0.28.1
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+black>=24.0.0
+ruff>=0.6.0
+

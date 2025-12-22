@@ -30,7 +30,7 @@ class Settings(BaseSettings):
 
     # Security
     secret_key: str = Field(
-        default="change-me-in-production",
+        default="subtitle-maker-dev-secret-key-32-chars-min!!",
         min_length=32,
     )
     access_token_expire_minutes: int = 30

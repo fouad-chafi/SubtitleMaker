@@ -73,7 +73,7 @@
 
   /* Selection */
   ::selection {
-    @apply bg-primary/30 text-primary-100;
+    @apply bg-primary/30 text-white;
   }
 
   /* Video.js overrides */
