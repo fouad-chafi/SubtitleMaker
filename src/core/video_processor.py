@@ -208,12 +208,16 @@ class VideoProcessor:
         # Build subtitle filter based on file type
         if subtitle_path.suffix.lower() == ".ass":
             # ASS files have built-in styling
-            filter_spec = f"ass='{subtitle_path}'"
+            # Convert backslashes to forward slashes for FFmpeg compatibility
+            subtitle_path_str = str(subtitle_path).replace('\\', '/')
+            filter_spec = f"ass='{subtitle_path_str}'"
         else:
             # For SRT/VTT, apply basic styling
             style = style or SubtitleStyle()
+            # Convert backslashes to forward slashes for FFmpeg compatibility
+            subtitle_path_str = str(subtitle_path).replace('\\', '/')
             filter_spec = (
-                f"subtitles='{subtitle_path}':"
+                f"subtitles='{subtitle_path_str}':"
                 f"force_style='FontSize={style.font_size},"
                 f"PrimaryColour=&H{SubtitleFormatter._bgr_to_hex(style.font_color)},"
                 f"OutlineColour=&H{SubtitleFormatter._bgr_to_hex(style.outline_color)},"
@@ -224,8 +228,11 @@ class VideoProcessor:
         cmd = [
             self.ffmpeg_path,
             "-i", str(video_path),
-            "-vf", f'"{filter_spec}"',
-            "-c:v", str(codec.value),
+            "-vf", filter_spec,  # Don't add extra quotes - shell=False handles it
+            # Use NVENC (GPU) for faster encoding on RTX 4070 Super
+            "-c:v", "h264_nvenc" if codec == VideoCodec.H264 else "hevc_nvenc",
+            "-preset", "p6",  # Slow preset for better quality (p1-p7, p7=fastest, p6=slow)
+            "-cq", "23",  # Constant quality mode (18-28, lower=better)
             "-c:a", "copy",  # Copy audio without re-encoding
             "-y",
             str(output_path),

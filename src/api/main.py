@@ -10,10 +10,20 @@ from ..models.config import Settings, get_settings
 from .routes import health, jobs, transcribe, styles
 from ..utils.logger import setup_logging
 
+# Global transcription service instance
+_transcription_service = None
+
+
+def get_transcription_service():
+    """Get the global transcription service instance."""
+    return _transcription_service
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager."""
+    global _transcription_service
+
     settings = get_settings()
 
     # Setup logging
@@ -23,19 +33,26 @@ async def lifespan(app: FastAPI):
         log_format="json" if settings.is_production else "text",
     )
 
-    # Load Whisper model on startup
+    # Create global service instance
     from ..services.transcription_service import TranscriptionService
 
-    service = TranscriptionService(settings)
+    _transcription_service = TranscriptionService(settings)
+
+    # Load Whisper model on startup
     try:
-        service.transcriber.load_model()
+        _transcription_service.transcriber.load_model()
     except Exception as e:
         print(f"Warning: Could not load Whisper model: {e}")
+
+    # Inject the service into routes
+    transcribe.set_service(_transcription_service)
+    jobs.set_service(_transcription_service)
 
     yield
 
     # Cleanup
-    service.transcriber.unload_model()
+    _transcription_service.transcriber.unload_model()
+    _transcription_service = None
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:

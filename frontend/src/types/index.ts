@@ -9,6 +9,11 @@ export interface TranscriptionRequest {
   word_timestamps?: boolean;
   subtitle_format?: SubtitleFormat;
   num_speakers?: number | null;
+  // Auto burn-in options
+  auto_burn_in?: boolean;
+  burn_in_style_id?: string;
+  burn_in_output_format?: 'mp4' | 'mkv' | 'webm';
+  burn_in_quality?: 'low' | 'medium' | 'high';
 }
 
 export interface TranscriptionJob {
@@ -18,6 +23,7 @@ export interface TranscriptionJob {
   filename: string;
   detected_language?: string | null;
   output_path?: string | null;
+  video_output_path?: string | null;  // Path to video with burned-in subtitles
   error_message?: string | null;
   created_at: string;
   started_at?: string | null;
@@ -55,4 +61,11 @@ export interface GPUInfo {
   vram_used_mb: number;
   vram_free_mb: number;
   temperature_c?: number | null;
+}
+
+export interface BurnInRequest {
+  style_id?: string;
+  custom_style?: Partial<SubtitleStyle>;
+  output_format?: 'mp4' | 'mkv' | 'webm';
+  quality?: 'low' | 'medium' | 'high';
 }

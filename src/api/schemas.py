@@ -38,6 +38,12 @@ class TranscriptionRequest(BaseModel):
     subtitle_format: str = Field(default="srt", description="Output format")
     num_speakers: Optional[int] = Field(default=None, ge=1, le=10)
 
+    # Auto burn-in options
+    auto_burn_in: bool = Field(default=False, description="Automatically burn subtitles into video")
+    burn_in_style_id: str = Field(default="professional", description="Style preset for burn-in")
+    burn_in_output_format: str = Field(default="mp4", description="Output video format: mp4, mkv, webm")
+    burn_in_quality: str = Field(default="high", description="Quality: low, medium, high")
+
 
 class TranscriptionResponse(BaseModel):
     """Response for transcription status."""
@@ -48,6 +54,7 @@ class TranscriptionResponse(BaseModel):
     filename: str
     detected_language: Optional[str] = None
     output_path: Optional[str] = None
+    video_output_path: Optional[str] = None  # Path to video with burned-in subtitles
     error_message: Optional[str] = None
     created_at: datetime
     started_at: Optional[datetime] = None
@@ -108,3 +115,20 @@ class GPUInfoResponse(BaseModel):
     vram_used_mb: int
     vram_free_mb: int
     temperature_c: Optional[float] = None
+
+
+class BurnInRequest(BaseModel):
+    """Request to burn subtitles into video."""
+
+    style_id: Optional[str] = Field(default="professional", description="Style preset ID")
+    custom_style: Optional[SubtitleStyleRequest] = Field(default=None, description="Custom style override")
+    output_format: str = Field(default="mp4", description="Output video format")
+    quality: str = Field(default="high", description="Quality preset (low, medium, high)")
+
+
+class BurnInResponse(BaseModel):
+    """Response for burn-in operation."""
+
+    job_id: UUID
+    status: str
+    output_path: Optional[str] = None

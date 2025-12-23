@@ -43,6 +43,12 @@ class TranscriptionConfig(BaseModel):
         default=None, ge=1, le=10, description="Number of speakers for diarization"
     )
 
+    # Auto burn-in options
+    auto_burn_in: bool = Field(default=False, description="Automatically burn subtitles into video")
+    burn_in_style_id: str = Field(default="professional", description="Style preset for burn-in")
+    burn_in_output_format: str = Field(default="mp4", description="Output video format: mp4, mkv, webm")
+    burn_in_quality: str = Field(default="high", description="Quality: low, medium, high")
+
 
 class TranscriptionJob(BaseModel):
     """A transcription job representation."""
@@ -64,6 +70,7 @@ class TranscriptionJob(BaseModel):
     # Output
     subtitle_format: str = "srt"
     output_path: Optional[str] = None
+    video_output_path: Optional[str] = None  # Path to video with burned-in subtitles
     detected_language: Optional[str] = None
 
     # Metadata

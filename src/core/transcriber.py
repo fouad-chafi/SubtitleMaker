@@ -174,6 +174,7 @@ class WhisperTranscriber:
         audio_path: str | Path,
         config: TranscriptionConfig,
         job: TranscriptionJob,
+        progress_callback: Optional[callable] = None,
     ) -> TranscriptionResult:
         """
         Transcribe audio file using Whisper.
@@ -182,6 +183,7 @@ class WhisperTranscriber:
             audio_path: Path to audio file
             config: Transcription configuration
             job: Job to update with progress
+            progress_callback: Optional callback(progress: float) for progress updates
 
         Returns:
             TranscriptionResult with subtitle track and metadata
@@ -198,6 +200,15 @@ class WhisperTranscriber:
         try:
             job.status = JobStatus.PROCESSING
             job.started_at = None  # Will be set by job manager
+
+            # Get audio duration for progress calculation
+            from .video_processor import VideoProcessor
+            video_proc = VideoProcessor()
+            try:
+                duration = video_proc.get_video_duration(audio_path)
+                logger.info(f"Audio duration: {duration:.2f}s")
+            except Exception:
+                duration = 0
 
             # Prepare transcription parameters
             params = {
@@ -217,15 +228,27 @@ class WhisperTranscriber:
                 **params
             )
 
-            # Collect segments
+            # Collect segments with progress tracking
             segments_data = []
+            last_progress_update = 0
+            segment_count = 0
+
             for segment in segments_iter:
                 segments_data.append({
                     "start": segment.start,
                     "end": segment.end,
                     "text": segment.text.strip(),
-                    "avg_logprob": getattr(segment, "avg_logprob", None),
+                    "avg_logprob": getattr(segment, 'avg_logprob', None),
                 })
+                segment_count += 1
+
+                # Update progress based on audio position
+                if duration > 0 and segment.end > 0:
+                    current_progress = 30 + (segment.end / duration) * 50  # 30-80% for transcription
+                    if current_progress > last_progress_update + 1:  # Update every 1%
+                        if progress_callback:
+                            progress_callback(min(current_progress, 80))
+                        last_progress_update = current_progress
 
             # Create subtitle track
             track = SubtitleTrack(language=info.language)

@@ -16,4 +16,6 @@ if __name__ == "__main__":
         port=8000,
         reload=True,
         log_level="info",
+        reload_dirs=["src", "config"],  # Only watch these directories
+        reload_excludes=["frontend/*", "tests/*", "node_modules/*", "*.db"],
     )

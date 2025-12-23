@@ -1,5 +1,5 @@
 import apiClient from '../lib/api';
-import type { TranscriptionJob, TranscriptionRequest, UploadResponse } from '../types';
+import type { TranscriptionJob, TranscriptionRequest, UploadResponse, BurnInRequest } from '../types';
 
 export async function uploadFile(
   file: File,
@@ -14,6 +14,12 @@ export async function uploadFile(
   if (options.word_timestamps !== undefined) formData.append('word_timestamps', String(options.word_timestamps));
   if (options.subtitle_format) formData.append('subtitle_format', options.subtitle_format);
   if (options.num_speakers) formData.append('num_speakers', String(options.num_speakers));
+
+  // Auto burn-in options
+  if (options.auto_burn_in !== undefined) formData.append('auto_burn_in', String(options.auto_burn_in));
+  if (options.burn_in_style_id) formData.append('burn_in_style_id', options.burn_in_style_id);
+  if (options.burn_in_output_format) formData.append('burn_in_output_format', options.burn_in_output_format);
+  if (options.burn_in_quality) formData.append('burn_in_quality', options.burn_in_quality);
 
   const response = await apiClient.post<UploadResponse>('/transcribe', formData, {
     headers: {
@@ -62,6 +68,41 @@ export async function downloadSubtitle(jobId: string): Promise<void> {
   link.href = url;
 
   const filename = response.headers['content-disposition']?.match(/filename="?(.+)"?/)?.[1] || `subtitle.${jobId}`;
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+export async function downloadVideo(jobId: string, filename: string): Promise<void> {
+  const response = await apiClient.get(`/transcribe/${jobId}/video`, {
+    responseType: 'blob',
+  });
+
+  const url = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement('a');
+  link.href = url;
+
+  const baseFilename = filename.replace(/\.[^/.]+$/, '');
+  const videoFilename = `${baseFilename}_subtitled.mp4`;
+  link.setAttribute('download', videoFilename);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+export async function burnInSubtitles(jobId: string, request: BurnInRequest): Promise<void> {
+  const response = await apiClient.post(`/transcribe/${jobId}/burn-in`, request, {
+    responseType: 'blob',
+  });
+
+  const url = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement('a');
+  link.href = url;
+
+  const filename = response.headers['content-disposition']?.match(/filename="?(.+)"?/)?.[1] || `video_subtitled.${request.output_format || 'mp4'}`;
   link.setAttribute('download', filename);
   document.body.appendChild(link);
   link.click();

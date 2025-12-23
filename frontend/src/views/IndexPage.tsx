@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUpload } from '../hooks/useTranscription';
+import { useUpload, useStyles } from '../hooks/useTranscription';
 import { useLanguages } from '../hooks/useTranscription';
 import { cn } from '../lib/utils';
-import { Upload, FileVideo, Settings as SettingsIcon, Check } from 'lucide-react';
+import { Upload, FileVideo, Settings as SettingsIcon, Check, Film } from 'lucide-react';
 import type { SubtitleFormat } from '../types';
 
 const subtitleFormats: { value: SubtitleFormat; label: string }[] = [
@@ -18,6 +18,7 @@ function IndexPage() {
   const navigate = useNavigate();
   const upload = useUpload();
   const { data: languages } = useLanguages();
+  const { data: styles = [] } = useStyles();
 
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -28,6 +29,11 @@ function IndexPage() {
     word_timestamps: true,
     subtitle_format: 'srt' as SubtitleFormat,
     num_speakers: null as number | null,
+    // Auto burn-in options
+    auto_burn_in: true,  // Default to true as user wants video with subtitles
+    burn_in_style_id: 'professional',
+    burn_in_output_format: 'mp4' as 'mp4' | 'mkv' | 'webm',
+    burn_in_quality: 'high' as 'low' | 'medium' | 'high',
   });
 
   const handleDrop = (e: React.DragEvent) => {
@@ -258,7 +264,76 @@ function IndexPage() {
             />
             <span className="text-sm text-neutral-300">Word Timestamps</span>
           </label>
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={options.auto_burn_in}
+              onChange={(e) => setOptions({ ...options, auto_burn_in: e.target.checked })}
+              className="w-4 h-4 text-primary focus:ring-primary rounded"
+            />
+            <span className="text-sm text-neutral-300">Generate Video with Subtitles</span>
+          </label>
         </div>
+
+        {/* Burn-in Options */}
+        {options.auto_burn_in && (
+          <div className="glass rounded-xl p-6 space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Film className="w-5 h-5 text-primary" />
+              <h3 className="text-lg font-semibold">Video Output Options</h3>
+            </div>
+            <p className="text-sm text-neutral-400">
+              Automatically generate a video file with subtitles burned in (hard-subs).
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-4">
+              {/* Style Selector */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-neutral-300">Subtitle Style</label>
+                <select
+                  value={options.burn_in_style_id}
+                  onChange={(e) => setOptions({ ...options, burn_in_style_id: e.target.value })}
+                  className="w-full bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  {styles.map((style: any) => (
+                    <option key={style.id} value={style.id}>
+                      {style.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Format Selector */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-neutral-300">Video Format</label>
+                <select
+                  value={options.burn_in_output_format}
+                  onChange={(e) => setOptions({ ...options, burn_in_output_format: e.target.value as 'mp4' | 'mkv' | 'webm' })}
+                  className="w-full bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <option value="mp4">MP4 (H.264)</option>
+                  <option value="mkv">MKV</option>
+                  <option value="webm">WebM</option>
+                </select>
+              </div>
+
+              {/* Quality Selector */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-neutral-300">Quality</label>
+                <select
+                  value={options.burn_in_quality}
+                  onChange={(e) => setOptions({ ...options, burn_in_quality: e.target.value as 'low' | 'medium' | 'high' })}
+                  className="w-full bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <option value="low">Low (faster)</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High (H.265)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Submit Button */}
         <button

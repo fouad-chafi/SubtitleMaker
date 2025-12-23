@@ -126,6 +126,10 @@ class TranscriptionService:
         job.status = JobStatus.PROCESSING
         job.progress = 0.0
 
+        # Progress callback function
+        def update_progress(progress: float) -> None:
+            job.progress = progress
+
         try:
             # Step 1: Extract audio if video
             job.progress = 10.0
@@ -145,7 +149,7 @@ class TranscriptionService:
                     temp_audio_path,
                 )
 
-            # Step 2: Transcribe
+            # Step 2: Transcribe with dynamic progress
             job.progress = 30.0
             logger.info(f"Processing job {job_id}: transcribing")
 
@@ -154,6 +158,7 @@ class TranscriptionService:
                 audio_path,
                 job.config,
                 job,
+                update_progress,  # Pass progress callback
             )
 
             job.detected_language = result.detected_language
@@ -175,6 +180,56 @@ class TranscriptionService:
             job.output_path = str(output_path)
             job.vram_used_mb = result.vram_used_mb
             job.processing_time_seconds = result.processing_time
+
+            # Step 4: Auto burn-in if enabled
+            if job.config.auto_burn_in:
+                job.progress = 85.0
+                job.status = JobStatus.POST_PROCESSING
+                logger.info(f"Processing job {job_id}: burning in subtitles")
+
+                # Load style from presets
+                import yaml
+                from ..models.subtitle import SubtitleStyle
+                from ..core.video_processor import VideoCodec
+
+                # Path: src/services/transcription_service.py -> -> src/ -> (project root) -> config/
+                config_path = Path(__file__).parent.parent.parent / "config" / "styles.yaml"
+                with config_path.open("r") as f:
+                    styles_config = yaml.safe_load(f)
+
+                style_data = styles_config.get("styles", {}).get(job.config.burn_in_style_id, {})
+                style = SubtitleStyle(**style_data)
+
+                # Determine codec based on quality
+                codec_map = {
+                    "low": VideoCodec.H264,
+                    "medium": VideoCodec.H264,
+                    "high": VideoCodec.H265,
+                }
+                codec = codec_map.get(job.config.burn_in_quality, VideoCodec.H264)
+
+                # Generate output video path
+                output_dir = Path("./output")
+                video_output_path = output_dir / f"{job_id}_burned.{job.config.burn_in_output_format}"
+
+                # Update progress before starting burn-in to show activity
+                job.progress = 88.0
+
+                # Burn subtitles
+                logger.info(f"Job {job_id}: Starting GPU video encoding (this may take 1-3 minutes for a 20min video)...")
+                await asyncio.to_thread(
+                    self.video_processor.burn_subtitles,
+                    input_path,
+                    output_path,
+                    video_output_path,
+                    style,
+                    codec,
+                )
+
+                job.video_output_path = str(video_output_path)
+                job.progress = 95.0
+                logger.info(f"Job {job_id}: Video encoding completed successfully")
+
             job.progress = 100.0
             job.status = JobStatus.COMPLETED
             job.completed_at = datetime.utcnow()

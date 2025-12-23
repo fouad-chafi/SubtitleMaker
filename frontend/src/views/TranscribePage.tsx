@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useJobStatus, useCancelJob, useDownload } from '../hooks/useTranscription';
+import { useJobStatus, useCancelJob, useDownload, useDownloadVideo, useBurnIn, useStyles } from '../hooks/useTranscription';
 import { cn } from '../lib/utils';
-import { Check, X, Download, Loader2 } from 'lucide-react';
+import { Check, X, Download, Loader2, Film, Video } from 'lucide-react';
 
 function TranscribePage() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -11,6 +11,14 @@ function TranscribePage() {
   const { data: job, isLoading, error } = useJobStatus(jobId || '', !!jobId);
   const cancelJob = useCancelJob();
   const download = useDownload();
+  const downloadVideo = useDownloadVideo();
+  const burnIn = useBurnIn();
+  const { data: styles = [] } = useStyles();
+
+  // Burn-in options state
+  const [selectedStyle, setSelectedStyle] = useState<string>('professional');
+  const [outputFormat, setOutputFormat] = useState<'mp4' | 'mkv' | 'webm'>('mp4');
+  const [quality, setQuality] = useState<'low' | 'medium' | 'high'>('high');
 
   const handleDownload = () => {
     if (jobId) {
@@ -18,9 +26,28 @@ function TranscribePage() {
     }
   };
 
+  const handleDownloadVideo = () => {
+    if (jobId && job) {
+      downloadVideo.mutate({ jobId, filename: job.filename });
+    }
+  };
+
   const handleCancel = () => {
     if (jobId) {
       cancelJob.mutate(jobId);
+    }
+  };
+
+  const handleBurnIn = () => {
+    if (jobId) {
+      burnIn.mutate({
+        jobId,
+        request: {
+          style_id: selectedStyle,
+          output_format: outputFormat,
+          quality,
+        },
+      });
     }
   };
 
@@ -138,28 +165,57 @@ function TranscribePage() {
         {/* Actions */}
         <div className="flex gap-3">
           {job.status === 'completed' && (
-            <button
-              onClick={handleDownload}
-              disabled={download.isPending}
-              className={cn(
-                'flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors',
-                'bg-primary hover:bg-primary/90',
-                'flex items-center justify-center gap-2',
-                'disabled:opacity-50 disabled:cursor-not-allowed'
-              )}
-            >
-              {download.isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Downloading...
-                </>
+            <>
+              {job.video_output_path ? (
+                // Video download button when auto burn-in was enabled
+                <button
+                  onClick={handleDownloadVideo}
+                  disabled={downloadVideo.isPending}
+                  className={cn(
+                    'flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors',
+                    'bg-success hover:bg-success/90',
+                    'flex items-center justify-center gap-2',
+                    'disabled:opacity-50 disabled:cursor-not-allowed'
+                  )}
+                >
+                  {downloadVideo.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Downloading...
+                    </>
+                  ) : (
+                    <>
+                      <Video className="w-4 h-4" />
+                      Download Video with Subtitles
+                    </>
+                  )}
+                </button>
               ) : (
-                <>
-                  <Download className="w-4 h-4" />
-                  Download Subtitles
-                </>
+                // Subtitle download button when auto burn-in was not enabled
+                <button
+                  onClick={handleDownload}
+                  disabled={download.isPending}
+                  className={cn(
+                    'flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors',
+                    'bg-primary hover:bg-primary/90',
+                    'flex items-center justify-center gap-2',
+                    'disabled:opacity-50 disabled:cursor-not-allowed'
+                  )}
+                >
+                  {download.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Downloading...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-4 h-4" />
+                      Download Subtitles
+                    </>
+                  )}
+                </button>
               )}
-            </button>
+            </>
           )}
 
           {(job.status === 'processing' || job.status === 'queued' || job.status === 'uploading') && (
@@ -185,6 +241,88 @@ function TranscribePage() {
             </button>
           )}
         </div>
+
+        {/* Burn-in Section - only show if video wasn't auto-generated */}
+        {job.status === 'completed' && !job.video_output_path && (
+          <div className="pt-6 border-t border-neutral-700/50">
+            <div className="flex items-center gap-2 mb-4">
+              <Film className="w-5 h-5 text-primary" />
+              <h3 className="text-lg font-semibold">Burn Subtitles to Video</h3>
+            </div>
+            <p className="text-sm text-neutral-400 mb-4">
+              Create a new video file with subtitles permanently embedded (hard-subs).
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              {/* Style Selector */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-neutral-300">Subtitle Style</label>
+                <select
+                  value={selectedStyle}
+                  onChange={(e) => setSelectedStyle(e.target.value)}
+                  className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+                >
+                  {styles.map((style: any) => (
+                    <option key={style.id} value={style.id}>
+                      {style.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Format Selector */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-neutral-300">Output Format</label>
+                <select
+                  value={outputFormat}
+                  onChange={(e) => setOutputFormat(e.target.value as 'mp4' | 'mkv' | 'webm')}
+                  className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+                >
+                  <option value="mp4">MP4 (H.264)</option>
+                  <option value="mkv">MKV</option>
+                  <option value="webm">WebM</option>
+                </select>
+              </div>
+
+              {/* Quality Selector */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-neutral-300">Quality</label>
+                <select
+                  value={quality}
+                  onChange={(e) => setQuality(e.target.value as 'low' | 'medium' | 'high')}
+                  className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+                >
+                  <option value="low">Low (faster)</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High (H.265)</option>
+                </select>
+              </div>
+            </div>
+
+            <button
+              onClick={handleBurnIn}
+              disabled={burnIn.isPending}
+              className={cn(
+                'w-full py-2.5 px-4 rounded-lg font-medium transition-colors',
+                'bg-secondary hover:bg-secondary/90',
+                'flex items-center justify-center gap-2',
+                'disabled:opacity-50 disabled:cursor-not-allowed'
+              )}
+            >
+              {burnIn.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Processing Video...
+                </>
+              ) : (
+                <>
+                  <Video className="w-4 h-4" />
+                  Burn & Download Video
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -6,12 +6,14 @@ import {
   cancelJob,
   deleteJob,
   downloadSubtitle,
+  downloadVideo,
+  burnInSubtitles,
   getStyles,
   getLanguages,
   getHealthStatus,
   getGPUInfo,
 } from '../services/transcription';
-import type { TranscriptionRequest } from '../types';
+import type { TranscriptionRequest, BurnInRequest } from '../types';
 
 export function useUpload() {
   const queryClient = useQueryClient();
@@ -74,6 +76,20 @@ export function useDeleteJob() {
 export function useDownload() {
   return useMutation({
     mutationFn: (jobId: string) => downloadSubtitle(jobId),
+  });
+}
+
+export function useDownloadVideo() {
+  return useMutation({
+    mutationFn: ({ jobId, filename }: { jobId: string; filename: string }) =>
+      downloadVideo(jobId, filename),
+  });
+}
+
+export function useBurnIn() {
+  return useMutation({
+    mutationFn: ({ jobId, request }: { jobId: string; request: BurnInRequest }) =>
+      burnInSubtitles(jobId, request),
   });
 }
 
