@@ -1,6 +1,7 @@
 <div align="center">
 
-  ![SubtitleMaker Logo](#)
+ <img width="232" height="57" alt="image" src="https://github.com/user-attachments/assets/4e5c6320-553f-4651-b649-bd03688beaea" />
+
 
   # SubtitleMaker
 
@@ -326,30 +327,33 @@ DEFAULT_STYLE=professional
 <!-- Add your screenshots below -->
 
 #### Dashboard / Upload
-![Dashboard](screenshots/dashboard.png)
-*Drag & drop interface with recent transcriptions*
+<img width="2154" height="1239" alt="image" src="https://github.com/user-attachments/assets/72c8ac3e-f8e7-4994-9d1f-76c4982b7c02" />
+
 
 #### Transcription Progress
-![Progress](screenshots/progress.png)
-*Real-time progress tracking with GPU metrics*
+<img width="2010" height="809" alt="image" src="https://github.com/user-attachments/assets/32630681-448d-4fa3-831b-5c59a99316a4" />
+
+
+<img width="2137" height="1006" alt="image" src="https://github.com/user-attachments/assets/8b9ec4d2-3f11-4d1b-ac2f-060cc4462862" />
+
 
 #### Subtitle Editor
-![Editor](screenshots/editor.png)
-*Interactive subtitle editing with style preview*
+<img width="1973" height="936" alt="image" src="https://github.com/user-attachments/assets/11576ede-5f35-4e75-bdb4-2d44b9df70a4" />
+
 
 #### Style Customization
-![Styles](screenshots/styles.png)
-*Built-in style presets with live preview*
+<img width="1390" height="1134" alt="image" src="https://github.com/user-attachments/assets/1f73172f-ad39-4553-ac8d-e85cee62d291" />
+
 
 ### Backend / API
 
 #### API Documentation
-![API Docs](screenshots/api-docs.png)
-*Interactive OpenAPI/Swagger documentation*
+<img width="2053" height="1287" alt="image" src="https://github.com/user-attachments/assets/17825395-5113-44f1-a68d-3b560957012f" />
+
 
 #### GPU Metrics
-![GPU](screenshots/gpu-metrics.png)
-*Real-time GPU monitoring dashboard*
+<img width="2021" height="992" alt="image" src="https://github.com/user-attachments/assets/7840f4e0-dc38-4e9f-8969-90e6d763d180" />
+
 
 ---
 
